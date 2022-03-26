@@ -3,23 +3,32 @@ from django.core.validators import URLValidator
 from hashlib import sha1
 from datetime import date
 from django.utils.text import slugify
+from django.urls import reverse
 
 class Group(models.Model):
-    group_name = models.CharField(max_length=50, help_text='Name of Event')
+    event_name = models.CharField(max_length=50)
     event_date = models.DateField()
-    pub_date = models.DateField(default=date.today)
-    slug = models.SlugField()
+    join_code = models.CharField(max_length=15)
+    pub_date = models.DateField(auto_now_add=True)
+    slug = models.SlugField(unique=True, null=False)
+
+    def __str__(self):
+        return self.event_name
+
+    def get_absolute_url(self):
+        return reverse("group_results", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.group_name)
+        self.slug = slugify(self.event_name)
         super(Group, self).save(*args, **kwargs)
 
 
 class Gift(models.Model):
+    group = models.ForeignKey(Group, related_name='gift', on_delete=models.CASCADE)
     title = models.CharField(max_length = 144)
-    desc = models.TextField('description', blank=True, default='', help_text='Description of item')
+    desc = models.TextField('description', blank=True, default='')
     url = models.TextField(validators=[URLValidator()])
-    only_one = models.BooleanField(default=True,help_text='When checked, only one of this item can be gifted.')
+    only_one = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['title']

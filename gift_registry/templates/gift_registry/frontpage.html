@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>This is the home page</h1>
+<h3>People will have the option to create a gift registry group or join one</h3>
+<a class="btn btn-primary" href="{% url 'create_group' %}">Create Group</a>
+<a class="btn btn-primary" href="{% url 'view_group' %}">View Group</a>
+{% endblock %}

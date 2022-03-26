@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gift_registry.apps.GiftRegistryConfig'
+    'gift_registry'
 ]
 
 MIDDLEWARE = [
