@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<p>
+    {{name}} has been created for {{ date }}!
+    The join code is {{ join_code }}
+</p>
 
-<p>Success! Your gift registry group has been created! You can access your group through clicking <strong>Find
-        Group</strong></p>
 <a class="btn btn-primary btn-lg btn-block" href="{% url 'home_view' %}">Home</a>
 <a class="btn btn-secondary btn-lg btn-block" href="{% url 'view_group' %}">Find Group</a>
 

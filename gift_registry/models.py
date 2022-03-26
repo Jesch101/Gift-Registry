@@ -11,12 +11,9 @@ class Group(models.Model):
     join_code = models.CharField(max_length=15)
     pub_date = models.DateField(auto_now_add=True)
     slug = models.SlugField(unique=True, null=False)
-
+    
     def __str__(self):
         return self.event_name
-
-    def get_absolute_url(self):
-        return reverse("group_results", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.event_name)
