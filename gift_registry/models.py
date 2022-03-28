@@ -15,8 +15,12 @@ class Group(models.Model):
     def __str__(self):
         return self.event_name
 
+    def get_absolute_url(self):
+        return reverse("group_detail", kwargs={"slug": self.slug})
+
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.event_name)
+        if not self.slug:
+            self.slug = slugify(self.event_name)
         super(Group, self).save(*args, **kwargs)
 
 

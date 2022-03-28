@@ -3,7 +3,49 @@
 {% block content %}
 
 
-<p>View group here</p>
+<h2>Find Group</h2>
+<p>(case sensitive)</p>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="field">
+        <div class="control">
+            <button name="save" type="submit" class="btn btn-success">Find Group</button>
+            <a href="{% url 'home_view' %}" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+
+    {% if foundGroup %}
+
+    <p></p>
+    <a href="{% url 'group_detail' slug %}" class="btn btn-primary">Here's a link for your group</a>
+
+    {% else %}
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="btn btn-light btn-sm" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Uh oh!</strong>That group does not exist!
+
+    </div>
+
+    <!-- Error popup -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            $('.alert').alert()
+        })
+    </script>
+    {% endif %}
+    {% endif %}
+</form>
+
 
 
 {% endblock %}
