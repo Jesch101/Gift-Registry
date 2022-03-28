@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.urls import reverse
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date
 
-from .forms import GroupForm, FindGroupForm
+from .forms import GroupForm, FindGroupForm, AddGiftForm
 from .models import Group, Gift, Gifter
 
 def home(request):
@@ -59,9 +59,9 @@ def find_group(request):
 
     return render(request, 'gift_registry/view_group.html', context)
 
-
 def group_detail(request, slug):
     group = Group.objects.get(slug=slug)
+
     days_left = group.event_date - date.today()
     if days_left.days < 0:
         time_left = "The event date has passed!"
@@ -70,8 +70,39 @@ def group_detail(request, slug):
     else:
         time_left = f"{days_left.days} days left til the event!"
 
+    gifts = Gift.objects.filter(group=group)
+
     context = {
         'group':group,
-        'time_left':time_left
+        'time_left':time_left,
+        'gifts':gifts,
+        'slug':slug
     }
+
     return render(request, 'gift_registry/group_detail.html',context)
+
+def add_gift(request, slug):
+    group = Group.objects.get(slug=slug)
+    form = AddGiftForm(request.POST or None)
+    context = {
+        'form':form,
+        'group':group,
+        'slug':slug,
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+
+            f = form.save(commit=False)
+            f.group = group
+            f.save()
+            gifts = Gift.objects.filter(group=group)
+            context = {
+                'form':form,
+                'group':group,
+                'slug':slug,
+                'gifts':gifts,
+                'form_info':f
+            }
+            return render(request, 'gift_registry/group_detail.html',context)
+            
+    return render(request, 'gift_registry/add_gift.html', context)

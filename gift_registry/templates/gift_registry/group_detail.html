@@ -2,11 +2,17 @@
 
 {% block content %}
 
-<h4><strong>Group name: {{group.event_name }}</strong></h4>
-<h6>Event date: <strong>{{group.event_date}}</strong></h6>
-<h6>Date published: <strong>{{group.pub_date}}</strong></h6>
+<h4><strong>Group name: {{ group.event_name }}</strong></h4>
+<h6>Event date: <strong>{{ group.event_date}}</strong></h6>
+<h6>Date published: <strong>{{ group.pub_date}}</strong></h6>
 <h6>{{time_left}}</h6>
-
-<p>Your group details would be shown here! </p>
-
+<a class="btn btn-primary btn-sm" href="{% url 'add_gift' slug %}">Add gift</a>
+<hr>
+{% for gift in gifts %}
+<p>Title: {{ gift.title }}</p>
+<p>Description: {{ gift.desc }}</p>
+<p>URL: <a href="{{ gift.url }}" target="_blank">link</a></p>
+<p><strong>{{ gift.only_one|yesno:"Only One,Multiple" }}</strong></p>
+<hr>
+{% endfor %}
 {% endblock %}

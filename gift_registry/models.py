@@ -25,10 +25,10 @@ class Group(models.Model):
 
 
 class Gift(models.Model):
-    group = models.ForeignKey(Group, related_name='gift', on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length = 144)
     desc = models.TextField('description', blank=True, default='')
-    url = models.TextField(validators=[URLValidator()])
+    url = models.URLField(max_length=200)
     only_one = models.BooleanField(default=True)
 
     class Meta:

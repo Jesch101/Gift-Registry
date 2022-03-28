@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="field">
+        <div class="control">
+            <button name="save" type="submit" class="btn btn-success">Add Gift</button>
+            <a href="{% url 'group_detail' slug %}" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
