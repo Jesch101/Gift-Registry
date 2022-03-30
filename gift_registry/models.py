@@ -23,10 +23,10 @@ class Group(models.Model):
             self.slug = slugify(self.event_name)
         super(Group, self).save(*args, **kwargs)
 
-
 class Gift(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length = 144)
+    reciever = models.CharField(max_length = 50, blank=False, default='')
     desc = models.TextField('description', blank=True, default='')
     url = models.URLField(max_length=200)
     only_one = models.BooleanField(default=True)

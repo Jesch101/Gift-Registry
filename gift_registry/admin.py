@@ -9,7 +9,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 class GiftAdmin(admin.ModelAdmin):
     model = Gift
-    list_display = ['group', 'title', 'desc', 'url', 'only_one']
+    list_display = ['group', 'title', 'reciever' , 'desc', 'url', 'only_one']
     list_filter = ['group']
 
 admin.site.register(Group, GroupAdmin)

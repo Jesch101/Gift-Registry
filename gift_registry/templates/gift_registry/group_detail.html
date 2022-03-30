@@ -6,13 +6,27 @@
 <h6>Event date: <strong>{{ group.event_date}}</strong></h6>
 <h6>Date published: <strong>{{ group.pub_date}}</strong></h6>
 <h6>{{time_left}}</h6>
+{% if show_add %}
 <a class="btn btn-primary btn-sm" href="{% url 'add_gift' slug %}">Add gift</a>
+{% endif %}
 <hr>
+
 {% for gift in gifts %}
 <p>Title: {{ gift.title }}</p>
+
+{% if gift.reciever %}
+<p>This gift is for <strong>{{ gift.reciever }}</strong></p>
+{% endif %}
+
 <p>Description: {{ gift.desc }}</p>
-<p>URL: <a href="{{ gift.url }}" target="_blank">link</a></p>
+
+{% if gift.url %}
+<p>Link to gift: <a href="{{ gift.url }}" target="_blank">link</a></p>
+{% endif %}
+
 <p><strong>{{ gift.only_one|yesno:"Only One,Multiple" }}</strong></p>
+
 <hr>
 {% endfor %}
+
 {% endblock %}

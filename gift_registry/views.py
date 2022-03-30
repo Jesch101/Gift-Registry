@@ -35,6 +35,7 @@ def find_group(request):
         'form':form
     }
     if request.method == 'POST':
+        print("thats weird")
         if form.is_valid():
             try:
                 queryset = Group.objects.filter(
@@ -76,7 +77,8 @@ def group_detail(request, slug):
         'group':group,
         'time_left':time_left,
         'gifts':gifts,
-        'slug':slug
+        'slug':slug,
+        'show_add': True if days_left.days > 0 else False
     }
 
     return render(request, 'gift_registry/group_detail.html',context)
@@ -95,14 +97,7 @@ def add_gift(request, slug):
             f = form.save(commit=False)
             f.group = group
             f.save()
-            gifts = Gift.objects.filter(group=group)
-            context = {
-                'form':form,
-                'group':group,
-                'slug':slug,
-                'gifts':gifts,
-                'form_info':f
-            }
-            return render(request, 'gift_registry/group_detail.html',context)
+            
+            return redirect('group_detail', slug=slug)
             
     return render(request, 'gift_registry/add_gift.html', context)

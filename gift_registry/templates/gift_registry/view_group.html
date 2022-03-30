@@ -2,16 +2,19 @@
 
 {% block content %}
 
-
+{% load crispy_forms_tags %}
 <h2>Find Group</h2>
 <p>(case sensitive)</p>
+
 <form method="post" class="form-group">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
+    <p></p>
     <div class="field">
         <div class="control">
             <button name="save" type="submit" class="btn btn-success">Find Group</button>
             <a href="{% url 'home_view' %}" class="btn btn-danger">Cancel</a>
+            <p></p>
         </div>
     </div>
 
