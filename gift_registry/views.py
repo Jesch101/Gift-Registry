@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date
+from django.http import Http404, HttpResponseRedirect
 
 from .forms import GroupForm, FindGroupForm, AddGiftForm
 from .models import Group, Gift, Gifter
@@ -32,10 +33,10 @@ def find_group(request):
     queryset = Group.objects.all()
     form = FindGroupForm(request.POST or None)
     context = {
-        'form':form
+        'form':form,
+        'access':False
     }
     if request.method == 'POST':
-        print("thats weird")
         if form.is_valid():
             try:
                 queryset = Group.objects.filter(
@@ -47,7 +48,8 @@ def find_group(request):
             except:
                 context = {
                     'form':form,
-                    'error':True
+                    'error':True,
+                    'access':False
                 }
                 return render(request, 'gift_registry/view_group.html', context)
             
@@ -55,12 +57,28 @@ def find_group(request):
                 'form':form,
                 'queryset':queryset,
                 'slug':queryset[0].slug,
-                'foundGroup':True
+                'foundGroup':True,
+                'access':True
             }
 
     return render(request, 'gift_registry/view_group.html', context)
 
+
+def get_referer(request):
+    '''
+    Prevents users from being able to try to access any gift page without
+    getting the link from the join code form
+    '''
+    referer = request.META.get('HTTP_REFERER')
+    if not referer:
+        return None
+    return referer
+
 def group_detail(request, slug):
+
+    if not get_referer(request):
+        raise Http404
+    
     group = Group.objects.get(slug=slug)
 
     days_left = group.event_date - date.today()
@@ -84,6 +102,8 @@ def group_detail(request, slug):
     return render(request, 'gift_registry/group_detail.html',context)
 
 def add_gift(request, slug):
+    if not get_referer(request):
+        raise Http404
     group = Group.objects.get(slug=slug)
     form = AddGiftForm(request.POST or None)
     context = {

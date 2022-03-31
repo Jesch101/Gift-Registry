@@ -1,7 +1,4 @@
 from django.db import models
-from django.core.validators import URLValidator
-from hashlib import sha1
-from datetime import date
 from django.utils.text import slugify
 from django.urls import reverse
 
