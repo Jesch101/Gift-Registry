@@ -12,7 +12,9 @@ class GiftAdmin(admin.ModelAdmin):
     list_display = ['group', 'title', 'reciever' , 'desc', 'url', 'only_one']
     list_filter = ['group']
 
-
+class GifterAdmin(admin.ModelAdmin):
+    model = Gifter
+    list_display = ['group','gift',]
 
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Gift, GiftAdmin)
