@@ -1,5 +1,5 @@
 from django import forms
-from .models import Group, Gift
+from .models import Group, Gift, Gifter
 from datetime import datetime
 class GroupForm(forms.ModelForm):
     class Meta:
@@ -21,5 +21,9 @@ class AddGiftForm(forms.ModelForm):
     class Meta:
         model = Gift
         fields = ['title', 'desc', 'reciever','url', 'only_one']
-        
+
+class GifterForm(forms.ModelForm):
+    class Meta:
+        model = Gifter
+        fields = ['name']
         

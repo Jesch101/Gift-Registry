@@ -1,5 +1,5 @@
 from django.contrib import admin
-from gift_registry.models import Group, Gift
+from gift_registry.models import Group, Gift, Gifter
 
 class GroupAdmin(admin.ModelAdmin):
     model = Group
@@ -11,6 +11,8 @@ class GiftAdmin(admin.ModelAdmin):
     model = Gift
     list_display = ['group', 'title', 'reciever' , 'desc', 'url', 'only_one']
     list_filter = ['group']
+
+
 
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Gift, GiftAdmin)

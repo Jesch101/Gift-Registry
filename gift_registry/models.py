@@ -37,14 +37,15 @@ class Gift(models.Model):
     def __str__(self):
         return self.title
 
+
 class Gifter(models.Model):  
-    gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE, default='')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, default ='')
     name = models.CharField(max_length=55)
-    # email = models.EmailField()
 
     class Meta:
         ordering = ['id']
-        unique_together = ('gift', 'name')
+        unique_together = ('group', 'name')
 
     def __str__(self):
         return self.name
