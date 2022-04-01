@@ -8,6 +8,10 @@ from django.http import Http404, HttpResponseRedirect
 
 from .forms import GroupForm, FindGroupForm, AddGiftForm
 from .models import Group, Gift, Gifter
+from .serializers import GroupSerializer, GiftSerializer, GifterSerializer
+
+from rest_framework import viewsets
+from rest_framework import permissions
 
 def home(request):
     return render(request, 'gift_registry/frontpage.html', {})
@@ -121,3 +125,25 @@ def add_gift(request, slug):
             return redirect('group_detail', slug=slug)
             
     return render(request, 'gift_registry/add_gift.html', context)
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint that allows groups to be viewed or edited
+    """
+    queryset = Group.objects.all().order_by('-pub_date')
+    serializer_class = GroupSerializer
+
+class GiftViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint that allows gifts to be viewed or edited
+    """
+    queryset = Gift.objects.all().order_by('group')
+    serializer_class = GiftSerializer
+
+class GifterViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint that allows gifters to be viewed or edited
+    """
+    queryset = Gifter.objects.all().order_by('group')
+    serializer_class = GifterSerializer
