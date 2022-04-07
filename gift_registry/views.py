@@ -1,3 +1,4 @@
+from pickle import NONE
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.urls import reverse
@@ -6,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import date
 from django.http import Http404, HttpResponseRedirect
 
-from .forms import GroupForm, FindGroupForm, AddGiftForm
+from .forms import GroupForm, FindGroupForm, AddGiftForm, GifterForm, ClaimedForm
 from .models import Group, Gift, Gifter
 from .serializers import GroupSerializer, GiftSerializer, GifterSerializer
 
@@ -67,7 +68,6 @@ def find_group(request):
 
     return render(request, 'gift_registry/view_group.html', context)
 
-
 def get_referer(request):
     '''
     Prevents users from being able to try to access any gift page without
@@ -79,7 +79,6 @@ def get_referer(request):
     return referer
 
 def group_detail(request, slug):
-
     if not get_referer(request):
         raise Http404
     
@@ -94,13 +93,30 @@ def group_detail(request, slug):
         time_left = f"{days_left.days} days left til the event!"
 
     gifts = Gift.objects.filter(group=group)
+    form = GifterForm(request.POST or None)
+    
+
+    if request.method == "POST":
+        if form.is_valid():
+            f = form.save(commit=False)
+            f.group = group
+            f.gift = Gift.objects.get(
+                group=group,
+                title__exact=request.POST['gift'],
+                reciever__exact=request.POST['reciever'])
+            f.gift.claimed = True
+            f.gift.save()
+            f.save()
+            return redirect('group_detail', slug=slug)
 
     context = {
         'group':group,
         'time_left':time_left,
         'gifts':gifts,
         'slug':slug,
-        'show_add': True if days_left.days > 0 else False
+        'show_add': True if days_left.days > 0 else False,
+        'form':form,
+        
     }
 
     return render(request, 'gift_registry/group_detail.html',context)
@@ -125,6 +141,44 @@ def add_gift(request, slug):
             return redirect('group_detail', slug=slug)
             
     return render(request, 'gift_registry/add_gift.html', context)
+
+def view_claimed(request, slug):
+    if not get_referer(request):
+        raise Http404
+    
+    group = Group.objects.get(slug=slug)
+    queryset = Gifter.objects.filter(group=group)
+    form = ClaimedForm(request.POST or None)
+
+    choices = [("-------", "-------")]
+    for x in queryset.values():
+        if (x['name'],x['name']) not in choices:
+            choices.append((x['name'],x['name']))
+    
+    form.fields['name'].choices = choices
+    gifters_exist = True if queryset.exists() else False
+
+    context = {
+        'slug':slug,
+        'form': form,
+        'gifters_exist': gifters_exist
+    }
+    
+    if request.method == "POST":
+        if form.is_valid():
+            queryset = Gifter.objects.filter(group=group, name__exact=form.cleaned_data['name'])
+            gifts = [x.gift for x in queryset]
+            
+            context = {
+                'slug':slug,
+                'form': form,
+                'gifters_exist': gifters_exist,
+                'gifts': gifts
+            }
+            return render(request, 'gift_registry/view_claimed.html', context)
+            
+
+    return render(request, 'gift_registry/view_claimed.html', context)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

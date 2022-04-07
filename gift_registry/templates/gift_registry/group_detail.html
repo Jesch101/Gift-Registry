@@ -1,31 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
+    <h4 class="pt-2"><strong>Group name: {{ group.event_name }}</strong></h4>
+    <h6>Event date: <strong>{{ group.event_date}}</strong></h6>
+    <h6>Date published: <strong>{{ group.pub_date}}</strong></h6>
+    <h6>{{time_left}}</h6>
+    {% if show_add %}
+    <a class="btn btn-primary btn-sm" href="{% url 'add_gift' slug %}">Add gift</a>
+    {% endif %}
+    {% if gifts %}
+    <a class="btn btn-primary btn-sm" href="{% url 'view_claimed' slug %}">View Claimed</a>
+    {% endif %}
+    <hr>
 
-<h4 class="pt-2"><strong>Group name: {{ group.event_name }}</strong></h4>
-<h6>Event date: <strong>{{ group.event_date}}</strong></h6>
-<h6>Date published: <strong>{{ group.pub_date}}</strong></h6>
-<h6>{{time_left}}</h6>
-{% if show_add %}
-<a class="btn btn-primary btn-sm" href="{% url 'add_gift' slug %}">Add gift</a>
-{% endif %}
-<hr>
+    {% for gift in gifts %}
 
-{% for gift in gifts %}
-<p>Title: {{ gift.title }}</p>
+    {% if gift.claimed == False and show_add %}
+    <p>Title: {{ gift.title }}</p>
 
-{% if gift.reciever %}
-<p>This gift is for <strong>{{ gift.reciever }}</strong></p>
-{% endif %}
+    {% if gift.reciever %}
+    <p>This gift is for <strong>{{ gift.reciever }}</strong></p>
+    {% endif %}
 
-<p>Description: {{ gift.desc }}</p>
+    <p>Description: {{ gift.desc }}</p>
+    {% if gift.url %}
+    <p>Link to gift: <a href="{{ gift.url }}" target="_blank">link</a></p>
+    {% endif %}
+    <p><strong>{{ gift.only_one|yesno:"Only Buy One, Can Buy Multiple" }}</strong></p>
+    <form method="post" class="form-group">
+        {% csrf_token %}
+        <p>
+            <label for="id_name">Claim:</label>
+            <input id="id_name" type="text" name="name" maxlength="55" required>
+            <input id="id_gift" type="hidden" name="gift" value="{{ gift }}">
+            <input id="id_group" type="hidden" name="group" value="{{ gift.group }}">
+            <input id="id_reciever" type="hidden" name="reciever" value="{{ gift.reciever }}">
 
-{% if gift.url %}
-<p>Link to gift: <a href="{{ gift.url }}" target="_blank">link</a></p>
-{% endif %}
+            <button name="save" type="submit" class="btn btn-success btn-sm">Submit</button>
 
-<p><strong>{{ gift.only_one|yesno:"Only One,Multiple" }}</strong></p>
+        </p>
+    </form>
+    <hr>
+    {% endif %}
 
-<hr>
-{% endfor %}
+    {% endfor %}
+</div>
 {% endblock %}

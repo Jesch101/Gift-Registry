@@ -25,8 +25,9 @@ class Gift(models.Model):
     title = models.CharField(max_length = 144)
     reciever = models.CharField(max_length = 50, blank=False, default='')
     desc = models.TextField('description', blank=True, default='')
-    url = models.URLField(max_length=200)
+    url = models.URLField(max_length=200, default='', blank=True)
     only_one = models.BooleanField(default=True)
+    claimed = models.BooleanField(default=False, blank=False)
 
     class Meta:
         ordering = ['title']
@@ -37,15 +38,15 @@ class Gift(models.Model):
     def __str__(self):
         return self.title
 
-
-class Gifter(models.Model):  
+class Gifter(models.Model): 
+    name = models.CharField(max_length=55) 
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE, default='')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, default ='')
-    name = models.CharField(max_length=55)
+
 
     class Meta:
-        ordering = ['id']
-        unique_together = ('group', 'name')
+        ordering = ['group']
+        
 
     def __str__(self):
         return self.name

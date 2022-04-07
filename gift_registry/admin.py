@@ -9,12 +9,13 @@ class GroupAdmin(admin.ModelAdmin):
 
 class GiftAdmin(admin.ModelAdmin):
     model = Gift
-    list_display = ['group', 'title', 'reciever' , 'desc', 'url', 'only_one']
-    list_filter = ['group']
+    list_display = ['group', 'title', 'reciever' , 'desc', 'url', 'only_one', 'claimed']
+    list_filter = ['group','title']
 
 class GifterAdmin(admin.ModelAdmin):
     model = Gifter
-    list_display = ['group','gift',]
+    list_display = ['name','group','gift']
 
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Gift, GiftAdmin)
+admin.site.register(Gifter, GifterAdmin)

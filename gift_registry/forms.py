@@ -15,7 +15,7 @@ class FindGroupForm(forms.ModelForm):
         fields = ['event_name', 'join_code']
 
 class AddGiftForm(forms.ModelForm):
-    only_one = forms.BooleanField(widget=forms.CheckboxInput)
+    only_one = forms.BooleanField(widget=forms.CheckboxInput, required=False)
     url = forms.URLField(required=False)
     reciever = forms.CharField(required=True)
     class Meta:
@@ -26,4 +26,8 @@ class GifterForm(forms.ModelForm):
     class Meta:
         model = Gifter
         fields = ['name']
-        
+
+class ClaimedForm(forms.Form):
+    placeholder = [("","")]
+    name = forms.ChoiceField(choices=placeholder)
+    

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div class="container pt-5">
+    <h2 class="pb-3">View claimed gifts</h2>
+    {% if gifters_exist %}
+    <form method="post" class="form-group">
+        {% csrf_token %}
+        Search by gifter name: {{ form.name }}
+        <div class="pt-2">
+            <button name="save" type="submit" class="btn btn-primary btn-sm">Search</button>
+            <a href="{% url 'group_detail' slug %}" class="btn btn-danger ps-2 btn-sm">Go back</a>
+        </div>
+    </form>
+
+    {% else %}
+    <p>No claimed gifts!</p>
+    <a href="{% url 'group_detail' slug %}" class="btn btn-danger ps-2 btn-sm">Go back</a>
+    {% endif %}
+    {% if gifts %}
+    <h5 class="py-2"><u>Claimed Gifts</u></h5>
+
+    {% endif %}
+
+    {% for gift in gifts %}
+    <p><strong>{{ gift.title }}</strong> for <strong>{{ gift.reciever }}</strong></p>
+    <p>Description: {{ gift.desc }}</p>
+    <p>{{ gift.only_one|yesno:"Only Buy One, Can Buy Multiple" }}</p>
+    {% if gift.url %}
+    <p><a href="{{ gift.url }}"></a>Link to gift</p>
+    {% endif %}
+    <hr>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

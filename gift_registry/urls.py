@@ -8,4 +8,5 @@ urlpatterns = [
     path('view-group/',views.find_group, name='view_group'),
     path('view-group/<slug:slug>/', views.group_detail, name='group_detail'),
     path('view-group/<slug:slug>/add-gift/', views.add_gift, name='add_gift'),
+    path('view-group/<slug:slug>/view-claimed/',views.view_claimed, name='view_claimed')
 ]
