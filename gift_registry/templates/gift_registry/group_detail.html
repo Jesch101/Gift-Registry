@@ -31,7 +31,7 @@
     <form method="post" class="form-group">
         {% csrf_token %}
         <p>
-            <label for="id_name">Claim:</label>
+            <label for="id_name">Enter name to claim gift:</label>
             <input id="id_name" type="text" name="name" maxlength="55" required>
             <input id="id_gift" type="hidden" name="gift" value="{{ gift }}">
             <input id="id_group" type="hidden" name="group" value="{{ gift.group }}">
